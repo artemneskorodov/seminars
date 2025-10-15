@@ -1,0 +1,9 @@
+PROJECT ?= wc
+SOURCE  =  $(PROJECT)/$(PROJECT).c
+OUTPUT  =  $(PROJECT)/$(PROJECT)
+CC      =  gcc
+
+.PHONE: $(OUTPUT)
+
+$(OUTPUT): $(SOURCE)
+	$(CC) $(SOURCE) -o $(OUTPUT) -g
