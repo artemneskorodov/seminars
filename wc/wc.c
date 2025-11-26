@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #define BUFFER_SIZE (4)
 
