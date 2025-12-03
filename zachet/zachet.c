@@ -132,7 +132,7 @@ cook( int msg_id)
         days_count++;
 
         // Получаем еду от живых охотников
-        printf( "Getting food from hunters\n");
+        printf( "Getting food from hunters (%d)\n", hunters_count);
         int brought_food[MAX_HUNTERS] = {0};
         for ( int i = 0; i != hunters_count; ++i )
         {
@@ -180,6 +180,8 @@ cook( int msg_id)
                 if ( brought_food[i] == 0 )
                 {
                     hunter_to_kill = i;
+                    food_count += kFoodInHunter;
+                    hunters_count--;
                     break;
                 }
             }
@@ -193,20 +195,23 @@ cook( int msg_id)
                         continue;
                     }
                     hunter_to_kill = i;
+                    food_count += kFoodInHunter;
+                    hunters_count--;
                     break;
                 }
             }
 
-            food_count += kFoodInHunter;
-            hunters_count--;
-
-            if ( !cook_had_food )
+            if ( !cook_had_food && food_count > 0 )
             {
                 // Повар забирает себе кусок еды если ему еще не досталось
                 food_count--;
+                cook_had_food = true;
             }
 
-            printf( "Hunter %d will be killed\n", hunter_to_kill);
+            if ( hunter_to_kill != -1 )
+            {
+                printf( "Hunter %d will be killed\n", hunter_to_kill);
+            }
         }
 
         // Отправляем всем сообщения, не убили ли мы их случайно, и досталась ли им еда
@@ -246,21 +251,21 @@ cook( int msg_id)
         // Повар дохнет если еды так и не досталось
         if ( !cook_had_food )
         {
-            for ( int i = 0; i != MAX_HUNTERS; ++i )
-            {
-                if ( !is_alive[i] )
-                {
-                    continue;
-                }
-                msg_t msg = {};
-                msg.mtype = SND_TO_HUNTER( i);
-                msg.value = MSG_COOK_DEAD;
-                if ( msgsnd( msg_id, &msg, sizeof( msg) - sizeof( msg.mtype), 0) < 0 )
-                {
-                    perror( "msgsnd failed");
-                    return EXIT_FAILURE;
-                }
-            }
+            // for ( int i = 0; i != MAX_HUNTERS; ++i )
+            // {
+            //     if ( !is_alive[i] )
+            //     {
+            //         continue;
+            //     }
+            //     msg_t msg = {};
+            //     msg.mtype = SND_TO_HUNTER( i);
+            //     msg.value = MSG_COOK_DEAD;
+            //     if ( msgsnd( msg_id, &msg, sizeof( msg) - sizeof( msg.mtype), 0) < 0 )
+            //     {
+            //         perror( "msgsnd failed");
+            //         return EXIT_FAILURE;
+            //     }
+            // }
             printf( "Cook is dead\n");
             printf( "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
             return EXIT_SUCCESS;
