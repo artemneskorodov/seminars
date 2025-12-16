@@ -59,7 +59,7 @@ bogatir( int         msg_id,
         }
 
         // Sort
-        std::sort( &values[0], &values[kBogatirsNum - 1]);
+        std::sort( &values[0], &values[kBogatirsNum]);
 
         // Check if unique
         bool is_unique = true;
